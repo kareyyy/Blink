@@ -1,60 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blink</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: 'Helvetica', sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      color: #fff;
-      text-align: center;
-    }
-    h1 { font-size: 4em; margin: 0; }
-    p { font-size: 1.5em; margin: 20px 0; }
-    button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background-color: #fff;
-      color: #ff9a9e;
-      transition: 0.3s;
-    }
-    button:hover { background-color: #ffd6d6; }
-    #blinkContent { display: none; margin-top: 30px; font-size: 1.8em; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blink</title>
+<style>
+  /* --- Body and background --- */
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Helvetica', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* --- Header and eye --- */
+  #header {
+    font-size: 4em;
+    margin: 0;
+    text-align: center;
+    position: relative;
+  }
+
+  #eyeSVG {
+    width: 80px;
+    height: 50px;
+    stroke: #fff;
+    stroke-width: 4;
+    fill: none;
+  }
+
+  /* --- Tagline --- */
+  #tagline {
+    font-size: 1.5em;
+    margin: 15px 0 30px 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  /* --- Button --- */
+  #blinkBtn {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #fff;
+    color: #ff9a9e;
+    transition: 0.3s;
+    position: relative;
+    z-index: 10;
+  }
+
+  #blinkBtn:hover {
+    background-color: #ffd6d6;
+    transform: scale(1.05);
+  }
+
+  /* --- Blink content --- */
+  #blinkContent {
+    display: none;
+    margin-top: 30px;
+    font-size: 1.8em;
+    text-align: center;
+    animation: popIn 0.8s ease forwards;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* --- Floating sparkles / doodles --- */
+  .doodle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+</style>
 </head>
 <body>
-  <h1>Blink</h1>
-  <p>One moment a day.</p>
-  <button onclick="showBlink()">Open today’s Blink</button>
-  <div id="blinkContent"></div>
 
-  <script>
-    const blinks = [
-      "A cat just walked across a rainbow.",
-      "Someone smiled at you today, somewhere.",
-      "Close your eyes for 3 seconds. Feel this moment.",
-      "You are allowed to do nothing for a minute.",
-      "Breathe in. Breathe out. That’s enough."
-    ];
+<!-- Header -->
+<div id="header">
+  <!-- Stick-eye SVG -->
+  <svg id="eyeSVG" viewBox="0 0 80 50">
+    <ellipse cx="40" cy="25" rx="35" ry="20"/>
+    <circle id="pupil" cx="40" cy="25" r="6" fill="#fff"/>
+    <line id="upperLid" x1="5" y1="25" x2="75" y2="25" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+</div>
 
-    function showBlink() {
-      const contentDiv = document.getElementById('blinkContent');
-      // Random Blink for MVP
-      const todayBlink = blinks[Math.floor(Math.random() * blinks.length)];
-      contentDiv.innerHTML = todayBlink;
-      contentDiv.style.display = 'block';
+<!-- Tagline -->
+<div id="tagline">One moment a day.</div>
+
+<!-- Button -->
+<button id="blinkBtn">Open today’s Blink</button>
+
+<!-- Blink content -->
+<div id="blinkContent"></div>
+
+<script>
+  // --- Blink content for MVP ---
+  const blinks = [
+    "A cat just walked across a rainbow.",
+    "Someone smiled at you today, somewhere.",
+    "Close your eyes for 3 seconds. Feel this moment.",
+    "You are allowed to do nothing for a minute.",
+    "Breathe in. Breathe out. That’s enough."
+  ];
+
+  const header = document.getElementById('header');
+  const eyeSVG = document.getElementById('eyeSVG');
+  const tagline = document.getElementById('tagline');
+  const blinkBtn = document.getElementById('blinkBtn');
+  const blinkContent = document.getElementById('blinkContent');
+
+  // --- Eye blink animation ---
+  function blinkEye() {
+    const upperLid = document.getElementById('upperLid');
+    // simple blink animation: hide lid line and pupil
+    upperLid.style.transition = '0.15s';
+    upperLid.setAttribute('y1', '25');
+    const pupil = document.getElementById('pupil');
+    
+    setTimeout(()=>{ 
+      upperLid.setAttribute('y1','25'); // simple blink illusion
+      pupil.setAttribute('r','0'); 
+    }, 150);
+
+    setTimeout(()=>{ pupil.setAttribute('r','6'); }, 300);
+  }
+
+  // --- Morph eye into "Blink" text ---
+  function morphEyeToText() {
+    eyeSVG.style.transition = "opacity 0.8s ease";
+    eyeSVG.style.opacity = 0;
+    setTimeout(()=> {
+      header.innerHTML = "Blink";
+      tagline.style.opacity = 1;
+    }, 800);
+  }
+
+  // Run eye animation on page load
+  window.onload = () => {
+    blinkEye();
+    setTimeout(morphEyeToText, 800);
+  };
+
+  // --- Button click ---
+  blinkBtn.onclick = () => {
+    const todayBlink = blinks[Math.floor(Math.random()*blinks.length)];
+    blinkContent.innerHTML = todayBlink;
+    blinkContent.style.display = 'block';
+  };
+
+  // --- Floating doodles ---
+  function createDoodles(count) {
+    for(let i=0;i<count;i++){
+      const d = document.createElement('div');
+      d.classList.add('doodle');
+      d.style.left = Math.random()*100 + "vw";
+      d.style.animationDuration = (5 + Math.random()*5) + "s";
+      document.body.appendChild(d);
     }
-  </script>
+  }
+
+  createDoodles(15); // create 15 sparkles/doodles
+</script>
+
 </body>
 </html>
