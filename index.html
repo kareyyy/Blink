@@ -1,154 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blink</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Helvetica', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    overflow: hidden;
-    position: relative;
-  }
-
-  #header { font-size: 4em; margin:0; text-align:center; position: relative; }
-  #eyeSVG { width: 80px; height:50px; stroke:#fff; stroke-width:4; fill:none; }
-  #tagline { font-size:1.5em; margin:15px 0 30px 0; opacity:0; transition: opacity 1s ease; }
-  #blinkBtn {
-    padding: 15px 30px; font-size:1.2em; border:none; border-radius:12px;
-    cursor:pointer; background:#fff; color:#ff9a9e; transition:0.3s; position:relative; z-index:10;
-  }
-  #blinkBtn:hover { background:#ffd6d6; transform:scale(1.05); }
-  #blinkContent { display:none; margin-top:30px; text-align:center; position:relative; }
-
-  /* --- Floating sparkles --- */
-  .doodle { position:absolute; width:10px; height:10px; background:#fff; border-radius:50%; opacity:0.6; animation: floatUp linear infinite; }
-  @keyframes floatUp { 0% { transform:translateY(100vh) scale(0.5); opacity:0.6; } 100% { transform:translateY(-10vh) scale(1); opacity:0; } }
-
-  /* --- Animations for micro-world --- */
-  .bounce { animation: bounce 2s infinite alternate ease-in-out; }
-  @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
-
-  .float { animation: floatAnim 4s infinite alternate ease-in-out; }
-  @keyframes floatAnim { 0% { transform: translateY(0); } 100% { transform: translateY(-20px); } }
-
-  .slide { animation: slide 5s infinite linear; }
-  @keyframes slide { 0% { transform: translateX(-60px); } 100% { transform: translateX(60px); } }
-
-  .flutter { animation: flutter 0.5s infinite alternate; }
-  @keyframes flutter { 0% { transform: rotate(-10deg); } 100% { transform: rotate(10deg); } }
-
-  .tiptoe { animation: tiptoe 3s infinite alternate ease-in-out; }
-  @keyframes tiptoe { 0% { transform: translateX(0) translateY(0); } 100% { transform: translateX(40px) translateY(-5px); } }
-
-</style>
+  <meta charset="UTF-8" />
+  <title>Blink — Night</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<div id="header">
-  <svg id="eyeSVG" viewBox="0 0 80 50">
-    <ellipse cx="40" cy="25" rx="35" ry="20"/>
-    <circle id="pupil" cx="40" cy="25" r="6" fill="#fff"/>
-    <line id="upperLid" x1="5" y1="25" x2="75" y2="25" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-  </svg>
-</div>
+  <div class="scene">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
 
-<div id="tagline">One moment a day.</div>
-<button id="blinkBtn">Open today’s Blink</button>
-<div id="blinkContent"></div>
+    <div class="star"></div>
 
-<script>
-  const header = document.getElementById('header');
-  const eyeSVG = document.getElementById('eyeSVG');
-  const tagline = document.getElementById('tagline');
-  const blinkBtn = document.getElementById('blinkBtn');
-  const blinkContent = document.getElementById('blinkContent');
+    <div class="text">
+      You don’t have to do anything right now.
+    </div>
+  </div>
 
-  const microWorlds = [
-    {
-      text: "A little cat is bouncing on clouds in your Blink today.",
-      svg: `<svg class="microSVG bounce" viewBox="0 0 50 50">
-              <circle cx="25" cy="25" r="10" stroke="#fff" fill="none" stroke-width="2"/>
-              <line x1="20" y1="20" x2="30" y2="20" stroke="#fff" stroke-width="2"/>
-            </svg>`
-    },
-    {
-      text: "A tiny paper boat sails through a river of stars.",
-      svg: `<svg class="microSVG slide" viewBox="0 0 50 50">
-              <polygon points="5,45 25,10 45,45" stroke="#fff" fill="none" stroke-width="2"/>
-            </svg>`
-    },
-    {
-      text: "A sleepy moon floats past tiny mountains.",
-      svg: `<svg class="microSVG float" viewBox="0 0 50 50">
-              <path d="M35 15 A10 10 0 1 1 25 5" stroke="#fff" fill="none" stroke-width="2"/>
-              <polygon points="5,45 25,20 45,45" stroke="#fff" fill="none" stroke-width="2"/>
-            </svg>`
-    },
-    {
-      text: "A glowing butterfly flutters across your Blink.",
-      svg: `<svg class="microSVG flutter" viewBox="0 0 50 50">
-              <circle cx="25" cy="25" r="5" stroke="#fff" fill="none" stroke-width="2"/>
-              <line x1="20" y1="20" x2="30" y2="30" stroke="#fff" stroke-width="2"/>
-              <line x1="30" y1="20" x2="20" y2="30" stroke="#fff" stroke-width="2"/>
-            </svg>`
-    },
-    {
-      text: "A tiny fox tiptoes across a rainbow bridge.",
-      svg: `<svg class="microSVG tiptoe" viewBox="0 0 50 50">
-              <polygon points="10,40 20,30 30,40" stroke="#fff" fill="none" stroke-width="2"/>
-              <path d="M5 45 C15 30, 35 30, 45 45" stroke="#fff" fill="none" stroke-width="2"/>
-            </svg>`
-    }
-  ];
-
-  function blinkEye() {
-    const upperLid = document.getElementById('upperLid');
-    const pupil = document.getElementById('pupil');
-    setTimeout(()=>{ pupil.setAttribute('r','0'); }, 150);
-    setTimeout(()=>{ pupil.setAttribute('r','6'); }, 300);
-  }
-
-  function morphEyeToText() {
-    eyeSVG.style.transition = "opacity 0.8s ease";
-    eyeSVG.style.opacity = 0;
-    setTimeout(()=> {
-      header.innerHTML = "Blink";
-      tagline.style.opacity = 1;
-    }, 800);
-  }
-
-  window.onload = () => {
-    blinkEye();
-    setTimeout(morphEyeToText, 800);
-  };
-
-  blinkBtn.onclick = () => {
-    const world = microWorlds[Math.floor(Math.random() * microWorlds.length)];
-    blinkContent.innerHTML = world.svg + `<div style="margin-top:10px">${world.text}</div>`;
-    blinkContent.style.display = 'block';
-  };
-
-  function createDoodles(count) {
-    for(let i=0;i<count;i++){
-      const d = document.createElement('div');
-      d.classList.add('doodle');
-      d.style.left = Math.random()*100 + "vw";
-      d.style.animationDuration = (5 + Math.random()*5) + "s";
-      document.body.appendChild(d);
-    }
-  }
-
-  createDoodles(15);
-
-</script>
 </body>
 </html>
