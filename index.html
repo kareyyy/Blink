@@ -2,22 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Blink — Night</title>
+  <title>Blink — Tiny Illustrated Storybook</title>
   <link rel="stylesheet" href="style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-  <div class="scene">
-    <div class="cloud cloud-1"></div>
-    <div class="cloud cloud-2"></div>
+  <div class="container">
+    <h1 class="title">Blink</h1>
+    <p class="subtitle">a tiny illustrated storybook</p>
+    <button id="openBtn">Open a page</button>
 
-    <div class="star"></div>
-
-    <div class="text">
-      You don’t have to do anything right now.
+    <div id="storyPage" class="story-page hidden">
+      <div id="illustration" class="illustration"></div>
+      <p id="storyText" class="story-text"></p>
     </div>
   </div>
+
+  <script>
+    const stories = [
+      {
+        illustration: "🎈", // placeholder for now, can be hand-drawn SVG later
+        text: "The balloon didn’t belong to anyone. It bobbed gently in the wind. For one whole morning, it danced above the garden. Then a bird nudged it, and it floated away."
+      },
+      {
+        illustration: "🐱",
+        text: "The cat waited by the window every day. Sometimes it stared outside. Sometimes it stared at nothing at all. It was content either way."
+      },
+      {
+        illustration: "⛴️",
+        text: "The boat had a tiny journey. Across a puddle, past a stone, under a leaf. By the time it reached the other side, it had stories to tell."
+      },
+      {
+        illustration: "💡",
+        text: "The lamp waited for someone to come home. It didn’t mind the quiet. It just waited. Patiently, softly, brightly."
+      },
+      {
+        illustration: "🍪",
+        text: "There was always one cookie left in the jar. Sometimes it was eaten. Sometimes it wasn’t. Either way, it made someone smile."
+      }
+    ];
+
+    const btn = document.getElementById("openBtn");
+    const storyPage = document.getElementById("storyPage");
+    const illustration = document.getElementById("illustration");
+    const storyText = document.getElementById("storyText");
+
+    btn.addEventListener("click", () => {
+      const story = stories[Math.floor(Math.random() * stories.length)];
+      illustration.textContent = story.illustration;
+      storyText.textContent = story.text;
+      storyPage.classList.remove("hidden");
+    });
+  </script>
 
 </body>
 </html>
