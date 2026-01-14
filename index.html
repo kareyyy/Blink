@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blink</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Helvetica', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #fff;
+      text-align: center;
+    }
+    h1 { font-size: 4em; margin: 0; }
+    p { font-size: 1.5em; margin: 20px 0; }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #fff;
+      color: #ff9a9e;
+      transition: 0.3s;
+    }
+    button:hover { background-color: #ffd6d6; }
+    #blinkContent { display: none; margin-top: 30px; font-size: 1.8em; }
+  </style>
+</head>
+<body>
+  <h1>Blink</h1>
+  <p>One moment a day.</p>
+  <button onclick="showBlink()">Open today’s Blink</button>
+  <div id="blinkContent"></div>
+
+  <script>
+    const blinks = [
+      "A cat just walked across a rainbow.",
+      "Someone smiled at you today, somewhere.",
+      "Close your eyes for 3 seconds. Feel this moment.",
+      "You are allowed to do nothing for a minute.",
+      "Breathe in. Breathe out. That’s enough."
+    ];
+
+    function showBlink() {
+      const contentDiv = document.getElementById('blinkContent');
+      // Random Blink for MVP
+      const todayBlink = blinks[Math.floor(Math.random() * blinks.length)];
+      contentDiv.innerHTML = todayBlink;
+      contentDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
