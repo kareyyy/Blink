@@ -63,13 +63,14 @@
     transform: scale(1.05);
   }
 
-  /* --- Blink content --- */
+  /* --- Blink content (micro-world) --- */
   #blinkContent {
     display: none;
     margin-top: 30px;
-    font-size: 1.8em;
+    font-size: 1.5em;
     text-align: center;
     animation: popIn 0.8s ease forwards;
+    position: relative;
   }
 
   @keyframes popIn {
@@ -91,6 +92,13 @@
   @keyframes floatUp {
     0% { transform: translateY(100vh) scale(0.5); opacity: 0.6; }
     100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  /* --- Tiny micro-world SVG doodle --- */
+  .microSVG {
+    width: 80px;
+    height: 80px;
+    margin: 10px auto;
   }
 
 </style>
@@ -117,38 +125,60 @@
 <div id="blinkContent"></div>
 
 <script>
-  // --- Blink content for MVP ---
-  const blinks = [
-    "A cat just walked across a rainbow.",
-    "Someone smiled at you today, somewhere.",
-    "Close your eyes for 3 seconds. Feel this moment.",
-    "You are allowed to do nothing for a minute.",
-    "Breathe in. Breathe out. That’s enough."
-  ];
-
   const header = document.getElementById('header');
   const eyeSVG = document.getElementById('eyeSVG');
   const tagline = document.getElementById('tagline');
   const blinkBtn = document.getElementById('blinkBtn');
   const blinkContent = document.getElementById('blinkContent');
 
+  // --- Micro-world templates (hand-drawn style) ---
+  const microWorlds = [
+    {
+      text: "A little cat is bouncing on clouds in your Blink today.",
+      svg: `<svg class="microSVG" viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="10" stroke="#fff" fill="none" stroke-width="2"/>
+              <line x1="20" y1="20" x2="30" y2="20" stroke="#fff" stroke-width="2"/>
+            </svg>`
+    },
+    {
+      text: "A tiny paper boat sails through a river of stars.",
+      svg: `<svg class="microSVG" viewBox="0 0 50 50">
+              <polygon points="5,45 25,10 45,45" stroke="#fff" fill="none" stroke-width="2"/>
+            </svg>`
+    },
+    {
+      text: "A sleepy moon floats past a tiny mountain.",
+      svg: `<svg class="microSVG" viewBox="0 0 50 50">
+              <path d="M35 15 A10 10 0 1 1 25 5" stroke="#fff" fill="none" stroke-width="2"/>
+              <polygon points="5,45 25,20 45,45" stroke="#fff" fill="none" stroke-width="2"/>
+            </svg>`
+    },
+    {
+      text: "A glowing butterfly flutters across your Blink.",
+      svg: `<svg class="microSVG" viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="5" stroke="#fff" fill="none" stroke-width="2"/>
+              <line x1="20" y1="20" x2="30" y2="30" stroke="#fff" stroke-width="2"/>
+              <line x1="30" y1="20" x2="20" y2="30" stroke="#fff" stroke-width="2"/>
+            </svg>`
+    },
+    {
+      text: "A tiny fox tiptoes across a rainbow bridge.",
+      svg: `<svg class="microSVG" viewBox="0 0 50 50">
+              <polygon points="10,40 20,30 30,40" stroke="#fff" fill="none" stroke-width="2"/>
+              <path d="M5 45 C15 30, 35 30, 45 45" stroke="#fff" fill="none" stroke-width="2"/>
+            </svg>`
+    }
+  ];
+
   // --- Eye blink animation ---
   function blinkEye() {
     const upperLid = document.getElementById('upperLid');
-    // simple blink animation: hide lid line and pupil
-    upperLid.style.transition = '0.15s';
-    upperLid.setAttribute('y1', '25');
     const pupil = document.getElementById('pupil');
-    
-    setTimeout(()=>{ 
-      upperLid.setAttribute('y1','25'); // simple blink illusion
-      pupil.setAttribute('r','0'); 
-    }, 150);
-
-    setTimeout(()=>{ pupil.setAttribute('r','6'); }, 300);
+    setTimeout(() => { pupil.setAttribute('r','0'); }, 150);
+    setTimeout(() => { pupil.setAttribute('r','6'); }, 300);
   }
 
-  // --- Morph eye into "Blink" text ---
+  // --- Morph eye into text ---
   function morphEyeToText() {
     eyeSVG.style.transition = "opacity 0.8s ease";
     eyeSVG.style.opacity = 0;
@@ -164,14 +194,14 @@
     setTimeout(morphEyeToText, 800);
   };
 
-  // --- Button click ---
+  // --- Button click: generate random micro-world ---
   blinkBtn.onclick = () => {
-    const todayBlink = blinks[Math.floor(Math.random()*blinks.length)];
-    blinkContent.innerHTML = todayBlink;
+    const world = microWorlds[Math.floor(Math.random() * microWorlds.length)];
+    blinkContent.innerHTML = world.svg + `<div style="margin-top:10px">${world.text}</div>`;
     blinkContent.style.display = 'block';
   };
 
-  // --- Floating doodles ---
+  // --- Floating sparkles / doodles ---
   function createDoodles(count) {
     for(let i=0;i<count;i++){
       const d = document.createElement('div');
@@ -183,6 +213,7 @@
   }
 
   createDoodles(15); // create 15 sparkles/doodles
+
 </script>
 
 </body>
